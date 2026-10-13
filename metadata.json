@@ -1,0 +1,6 @@
+{
+  "name": "CareDose - Smart Medication & Family Care System",
+  "description": "Smart medication management app with strip scanner, stock tracking, automatic refill alerts, adherence analytics, doctor appointments, and family missed-dose escalation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
