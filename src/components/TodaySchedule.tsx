@@ -14,10 +14,12 @@ import {
   ShieldAlert,
   Volume2,
   Calendar,
+  HeartPulse
 } from 'lucide-react';
 import { Medicine, DoseLog, FamilyMember } from '../types/medicare';
 import { MedicationQuickSummary } from './MedicationQuickSummary';
 import { MonthlyCalendarView } from './MonthlyCalendarView';
+import { WebNotificationBanner } from './WebNotificationBanner';
 
 interface TodayScheduleProps {
   medicines: Medicine[];
@@ -29,6 +31,7 @@ interface TodayScheduleProps {
   onOpenScanner: () => void;
   onTriggerAlarmChime: () => void;
   onSimulateEscalation: (member: FamilyMember, med: Medicine) => void;
+  onOpenDatabaseExplainer?: () => void;
 }
 
 export const TodaySchedule: React.FC<TodayScheduleProps> = ({
@@ -41,6 +44,7 @@ export const TodaySchedule: React.FC<TodayScheduleProps> = ({
   onOpenScanner,
   onTriggerAlarmChime,
   onSimulateEscalation,
+  onOpenDatabaseExplainer,
 }) => {
   const [skipModalDoseId, setSkipModalDoseId] = useState<string | null>(null);
   const [skipReasonText, setSkipReasonText] = useState('Felt nauseous / Doctor advice');
@@ -129,6 +133,43 @@ export const TodaySchedule: React.FC<TodayScheduleProps> = ({
         selectedMemberId={selectedMemberId}
         onMarkDose={onMarkDose}
         onTriggerAlarmChime={onTriggerAlarmChime}
+      />
+
+      {/* Sharma Indian Family Database Explainer Banner for New Users */}
+      {onOpenDatabaseExplainer && (
+        <div className="bg-gradient-to-r from-slate-900 via-teal-950 to-slate-900 text-white rounded-2xl p-4 border border-teal-800/80 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3.5">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-teal-500/20 text-teal-300 border border-teal-500/40 flex items-center justify-center shrink-0">
+              <HeartPulse className="w-5 h-5 text-teal-400" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-xs text-white">The Sharma Family Database</span>
+                <span className="text-[10px] bg-teal-500/20 text-teal-300 px-2 py-0.5 rounded-full border border-teal-500/30 font-semibold">
+                  Indian Household Demo
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-300 mt-0.5">
+                Pre-configured multi-generational household (Dadaji, Dadiji, Father, Mother, Son, Child) with authentic Indian medications (Glycomet, Atorva, Thyronorm, Shelcal) & 92% adherence history for immediate explanation.
+              </p>
+            </div>
+          </div>
+
+          <button
+            onClick={onOpenDatabaseExplainer}
+            className="px-3.5 py-2 bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-xs rounded-xl transition-all cursor-pointer whitespace-nowrap shadow-xs shrink-0 flex items-center gap-1.5"
+          >
+            <span>Explore Family DB Guide</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
+
+      {/* Web Browser Push Notification Control & Status */}
+      <WebNotificationBanner
+        medicines={visibleMedicines.length > 0 ? visibleMedicines : medicines}
+        members={members}
+        onTriggerModalReminder={onTriggerAlarmChime}
       />
 
       {/* View Switcher: Today's Timeline vs. Monthly Adherence Calendar */}

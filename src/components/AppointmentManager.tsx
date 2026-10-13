@@ -21,6 +21,7 @@ interface AppointmentManagerProps {
   selectedMemberId: string | 'all';
   onAddAppointment: (apt: Omit<Appointment, 'id'>) => void;
   onTriggerChime: () => void;
+  initialAddOpen?: boolean;
 }
 
 export const AppointmentManager: React.FC<AppointmentManagerProps> = ({
@@ -30,8 +31,13 @@ export const AppointmentManager: React.FC<AppointmentManagerProps> = ({
   selectedMemberId,
   onAddAppointment,
   onTriggerChime,
+  initialAddOpen = false,
 }) => {
-  const [addModalOpen, setAddModalOpen] = useState(false);
+  const [addModalOpen, setAddModalOpen] = useState(initialAddOpen);
+
+  React.useEffect(() => {
+    if (initialAddOpen) setAddModalOpen(true);
+  }, [initialAddOpen]);
   const [alertSimulationMsg, setAlertSimulationMsg] = useState<string | null>(null);
 
   // Form states

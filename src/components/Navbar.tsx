@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Pill, 
   Users, 
@@ -10,9 +10,16 @@ import {
   Clock, 
   Volume2, 
   VolumeX,
-  Camera
+  Camera,
+  LogIn,
+  User,
+  LogOut,
+  ChevronDown,
+  UserPlus,
+  HeartPulse
 } from 'lucide-react';
-import { FamilyMember } from '../types/medicare';
+import { FamilyMember, AuthUser } from '../types/medicare';
+import { QuickAddMenu } from './QuickAddMenu';
 
 interface NavbarProps {
   members: FamilyMember[];
@@ -20,9 +27,17 @@ interface NavbarProps {
   onSelectMember: (id: string | 'all') => void;
   activeTab: string;
   onSelectTab: (tab: string) => void;
+  currentUser: AuthUser | null;
+  onOpenAuth: () => void;
+  onLogout: () => void;
+  onOpenAddMedicine: () => void;
   onOpenScanner: () => void;
+  onOpenAddMember: () => void;
+  onOpenAddPrescription: () => void;
+  onOpenAddAppointment: () => void;
   onOpenArchitecture: () => void;
   onOpenSafetyGuide: () => void;
+  onOpenDatabaseExplainer?: () => void;
   onTriggerDemoReminder: () => void;
   onTriggerEscalationDemo: () => void;
   onResetData: () => void;
@@ -38,9 +53,17 @@ export const Navbar: React.FC<NavbarProps> = ({
   onSelectMember,
   activeTab,
   onSelectTab,
+  currentUser,
+  onOpenAuth,
+  onLogout,
+  onOpenAddMedicine,
   onOpenScanner,
+  onOpenAddMember,
+  onOpenAddPrescription,
+  onOpenAddAppointment,
   onOpenArchitecture,
   onOpenSafetyGuide,
+  onOpenDatabaseExplainer,
   onTriggerDemoReminder,
   onTriggerEscalationDemo,
   onResetData,
@@ -49,6 +72,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   pendingEscalationsCount,
   lowStockCount,
 }) => {
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const currentMember = members.find((m) => m.id === selectedMemberId);
 
   return (
@@ -67,11 +91,23 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         <div className="flex items-center gap-2">
+          {/* Sharma Family Database Explainer shortcut */}
+          {onOpenDatabaseExplainer && (
+            <button
+              onClick={onOpenDatabaseExplainer}
+              className="flex items-center gap-1 px-2.5 py-1 rounded bg-teal-500/20 hover:bg-teal-500/30 text-teal-300 border border-teal-500/40 text-[11px] font-semibold transition-colors cursor-pointer"
+              title="Explore Sharma Indian Family Database Guide"
+            >
+              <HeartPulse className="w-3 h-3 text-teal-400" />
+              <span>Sharma Family DB</span>
+            </button>
+          )}
+
           {/* Quick Demo Simulator Buttons */}
           <button
             onClick={onTriggerDemoReminder}
             className="flex items-center gap-1 px-2.5 py-1 rounded bg-teal-500/20 hover:bg-teal-500/30 text-teal-300 border border-teal-500/40 text-[11px] font-medium transition-colors cursor-pointer"
-            title="Trigger real-time 8:00 PM Metformin reminder chime"
+            title="Trigger real-time 8:00 PM Glycomet-GP dose reminder chime for Ramakant Dadaji"
           >
             <Bell className="w-3 h-3 text-teal-400" />
             <span>Simulate Reminder Alert</span>
@@ -80,7 +116,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             onClick={onTriggerEscalationDemo}
             className="flex items-center gap-1 px-2.5 py-1 rounded bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/40 text-[11px] font-medium transition-colors cursor-pointer"
-            title="Demonstrate Missed Dose Escalation to Family Contact"
+            title="Demonstrate Missed Dose Escalation to Rajesh Sharma (+91 98201 44521)"
           >
             <AlertTriangle className="w-3 h-3 text-rose-400" />
             <span>Simulate Missed Escalation</span>
@@ -157,14 +193,35 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Header Actions */}
         <div className="flex items-center gap-2">
+          {/* Prominent "+ Add Things" Quick Menu */}
+          <QuickAddMenu
+            onAddMedicine={onOpenAddMedicine}
+            onScanStrip={onOpenScanner}
+            onAddMember={onOpenAddMember}
+            onAddPrescription={onOpenAddPrescription}
+            onAddAppointment={onOpenAddAppointment}
+          />
+
           {/* Strip Scanner CTA Button */}
           <button
             onClick={onOpenScanner}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-teal-500 hover:bg-teal-400 text-slate-950 font-semibold text-xs transition-all shadow-md shadow-teal-500/20 cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-teal-300 border border-slate-700 text-xs font-semibold transition-all cursor-pointer"
           >
             <Camera className="w-3.5 h-3.5" />
-            <span>Scan Strip (AI OCR)</span>
+            <span className="hidden sm:inline">Scan Strip</span>
           </button>
+
+          {/* Sharma Family Database Guide */}
+          {onOpenDatabaseExplainer && (
+            <button
+              onClick={onOpenDatabaseExplainer}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-teal-500/15 hover:bg-teal-500/25 text-teal-300 border border-teal-500/30 text-xs font-semibold transition-colors cursor-pointer"
+              title="Indian Family Database & Features Explainer"
+            >
+              <HeartPulse className="w-3.5 h-3.5 text-teal-400" />
+              <span className="hidden md:inline">Sharma Family DB</span>
+            </button>
+          )}
 
           {/* Safety Check Modal */}
           <button
@@ -172,7 +229,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-medium transition-colors cursor-pointer"
           >
             <ShieldCheck className="w-3.5 h-3.5 text-teal-400" />
-            <span className="hidden md:inline">Safety Guide</span>
+            <span className="hidden lg:inline">Safety Guide</span>
           </button>
 
           {/* Architecture Explainer (For Viva / College Submission) */}
@@ -182,8 +239,76 @@ export const Navbar: React.FC<NavbarProps> = ({
             title="Flutter & Firebase System Architecture"
           >
             <Layers className="w-3.5 h-3.5 text-indigo-400" />
-            <span className="hidden lg:inline">Architecture</span>
+            <span className="hidden xl:inline">Architecture</span>
           </button>
+
+          {/* User Account / Login / Register Button */}
+          {currentUser ? (
+            <div className="relative">
+              <button
+                onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+                className="flex items-center gap-2 px-2.5 py-1 rounded-xl bg-slate-800/90 hover:bg-slate-700/90 border border-slate-700 text-xs transition-colors cursor-pointer"
+              >
+                <div
+                  className="w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-bold text-white shadow-xs"
+                  style={{ backgroundColor: currentUser.avatarColor }}
+                >
+                  {currentUser.name.charAt(0)}
+                </div>
+                <div className="text-left hidden md:block">
+                  <div className="font-semibold text-white leading-tight truncate max-w-24">
+                    {currentUser.name}
+                  </div>
+                  <div className="text-[10px] text-teal-400 capitalize">
+                    {currentUser.role.replace('_', ' ')}
+                  </div>
+                </div>
+                <ChevronDown className="w-3 h-3 text-slate-400" />
+              </button>
+
+              {userDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-52 bg-white rounded-2xl border border-slate-200 shadow-2xl py-2 z-50 text-xs text-slate-900 animate-scale-in">
+                  <div className="px-3 py-2 border-b border-slate-100">
+                    <div className="font-bold text-slate-900">{currentUser.name}</div>
+                    <div className="text-[11px] text-slate-500 truncate">{currentUser.email}</div>
+                    <span className="inline-block mt-1 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-teal-50 text-teal-700 border border-teal-200 capitalize">
+                      {currentUser.role.replace('_', ' ')}
+                    </span>
+                  </div>
+
+                  <button
+                    onClick={() => {
+                      setUserDropdownOpen(false);
+                      onOpenAuth();
+                    }}
+                    className="w-full text-left px-3.5 py-2 hover:bg-slate-50 flex items-center gap-2 text-slate-700 cursor-pointer"
+                  >
+                    <UserPlus className="w-3.5 h-3.5 text-slate-400" />
+                    <span>Switch / Register New User</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setUserDropdownOpen(false);
+                      onLogout();
+                    }}
+                    className="w-full text-left px-3.5 py-2 hover:bg-rose-50 flex items-center gap-2 text-rose-600 font-semibold cursor-pointer border-t border-slate-100 mt-1"
+                  >
+                    <LogOut className="w-3.5 h-3.5" />
+                    <span>Log Out</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <button
+              onClick={onOpenAuth}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs transition-colors shadow-xs cursor-pointer"
+            >
+              <LogIn className="w-3.5 h-3.5" />
+              <span>Login / Register</span>
+            </button>
+          )}
         </div>
       </div>
 

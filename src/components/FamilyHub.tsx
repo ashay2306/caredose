@@ -26,6 +26,7 @@ interface FamilyHubProps {
   onAddMember: (member: Omit<FamilyMember, 'id'>) => void;
   onSelectMember: (id: string) => void;
   onSimulateEscalation: (member: FamilyMember, med?: Medicine) => void;
+  initialAddOpen?: boolean;
 }
 
 export const FamilyHub: React.FC<FamilyHubProps> = ({
@@ -36,13 +37,18 @@ export const FamilyHub: React.FC<FamilyHubProps> = ({
   onAddMember,
   onSelectMember,
   onSimulateEscalation,
+  initialAddOpen = false,
 }) => {
-  const [addModalOpen, setAddModalOpen] = useState(false);
+  const [addModalOpen, setAddModalOpen] = useState(initialAddOpen);
+
+  React.useEffect(() => {
+    if (initialAddOpen) setAddModalOpen(true);
+  }, [initialAddOpen]);
   const [newName, setNewName] = useState('');
   const [newRelationship, setNewRelationship] = useState<Relationship>('Grandparent');
   const [newAge, setNewAge] = useState(72);
-  const [newGuardianName, setNewGuardianName] = useState('Alex (Caregiver)');
-  const [newGuardianPhone, setNewGuardianPhone] = useState('+1 (555) 789-1022');
+  const [newGuardianName, setNewGuardianName] = useState('Rajesh Sharma (Caregiver)');
+  const [newGuardianPhone, setNewGuardianPhone] = useState('+91 98201 44521');
   const [newNotes, setNewNotes] = useState('');
 
   const todayStr = new Date().toISOString().split('T')[0];

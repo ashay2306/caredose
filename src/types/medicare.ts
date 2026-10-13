@@ -129,3 +129,15 @@ export interface ScannedMedicineResult {
   safetyWarnings: string;
   suggestedFrequency: string;
 }
+
+export type UserRole = 'family_caregiver' | 'patient' | 'student' | 'admin';
+
+export interface AuthUser {
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
+  avatarColor: string;
+  familyProfileId?: string;
+  createdAt: string;
+}

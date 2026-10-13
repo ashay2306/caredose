@@ -20,6 +20,7 @@ interface PrescriptionVaultProps {
   medicines: Medicine[];
   selectedMemberId: string | 'all';
   onAddPrescription: (rx: Omit<Prescription, 'id'>) => void;
+  initialAddOpen?: boolean;
 }
 
 export const PrescriptionVault: React.FC<PrescriptionVaultProps> = ({
@@ -28,9 +29,14 @@ export const PrescriptionVault: React.FC<PrescriptionVaultProps> = ({
   medicines,
   selectedMemberId,
   onAddPrescription,
+  initialAddOpen = false,
 }) => {
   const [selectedRx, setSelectedRx] = useState<Prescription | null>(null);
-  const [addModalOpen, setAddModalOpen] = useState(false);
+  const [addModalOpen, setAddModalOpen] = useState(initialAddOpen);
+
+  React.useEffect(() => {
+    if (initialAddOpen) setAddModalOpen(true);
+  }, [initialAddOpen]);
 
   // Add Prescription Form
   const [title, setTitle] = useState('');
