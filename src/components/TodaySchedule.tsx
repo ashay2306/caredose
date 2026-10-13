@@ -12,9 +12,12 @@ import {
   User, 
   ArrowRight,
   ShieldAlert,
-  Volume2
+  Volume2,
+  Calendar,
 } from 'lucide-react';
 import { Medicine, DoseLog, FamilyMember } from '../types/medicare';
+import { MedicationQuickSummary } from './MedicationQuickSummary';
+import { MonthlyCalendarView } from './MonthlyCalendarView';
 
 interface TodayScheduleProps {
   medicines: Medicine[];
@@ -41,6 +44,7 @@ export const TodaySchedule: React.FC<TodayScheduleProps> = ({
 }) => {
   const [skipModalDoseId, setSkipModalDoseId] = useState<string | null>(null);
   const [skipReasonText, setSkipReasonText] = useState('Felt nauseous / Doctor advice');
+  const [activeViewMode, setActiveViewMode] = useState<'timeline' | 'calendar'>('timeline');
 
   const todayStr = new Date().toISOString().split('T')[0];
 
@@ -117,8 +121,65 @@ export const TodaySchedule: React.FC<TodayScheduleProps> = ({
 
   return (
     <div className="space-y-6">
-      {/* Overview Stat Card */}
-      <div className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-xs flex flex-col md:flex-row items-center justify-between gap-6">
+      {/* 24-Hour Medication Quick-Summary Widget */}
+      <MedicationQuickSummary
+        medicines={medicines}
+        doseLogs={doseLogs}
+        members={members}
+        selectedMemberId={selectedMemberId}
+        onMarkDose={onMarkDose}
+        onTriggerAlarmChime={onTriggerAlarmChime}
+      />
+
+      {/* View Switcher: Today's Timeline vs. Monthly Adherence Calendar */}
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-2.5 rounded-2xl border border-slate-200/90 shadow-xs">
+        <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl">
+          <button
+            onClick={() => setActiveViewMode('timeline')}
+            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+              activeViewMode === 'timeline'
+                ? 'bg-white text-slate-900 shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <Clock className="w-3.5 h-3.5 text-teal-600" />
+            <span>Today's Daily Timeline</span>
+          </button>
+          <button
+            onClick={() => setActiveViewMode('calendar')}
+            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+              activeViewMode === 'calendar'
+                ? 'bg-white text-slate-900 shadow-xs'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            <Calendar className="w-3.5 h-3.5 text-teal-600" />
+            <span>Monthly Adherence Calendar</span>
+          </button>
+        </div>
+
+        <div className="flex items-center gap-2 text-xs text-slate-500">
+          <span className="w-2 h-2 rounded-full bg-teal-500 inline-block" />
+          <span>
+            {activeViewMode === 'timeline'
+              ? 'Showing today\'s hourly scheduled doses & confirmations'
+              : 'Showing full monthly compliance patterns & day inspector'}
+          </span>
+        </div>
+      </div>
+
+      {activeViewMode === 'calendar' ? (
+        <MonthlyCalendarView
+          medicines={medicines}
+          doseLogs={doseLogs}
+          members={members}
+          selectedMemberId={selectedMemberId}
+          onMarkDose={onMarkDose}
+        />
+      ) : (
+        <>
+          {/* Overview Stat Card */}
+          <div className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-xs flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="flex items-center gap-4 w-full md:w-auto">
           <div className="w-16 h-16 rounded-2xl bg-teal-50 border border-teal-200 flex flex-col items-center justify-center text-teal-700">
             <span className="text-2xl font-bold">{adherencePercent}%</span>
@@ -400,6 +461,8 @@ export const TodaySchedule: React.FC<TodayScheduleProps> = ({
           </div>
         )}
       </div>
+      </>
+      )}
 
       {/* Skip Reason Dialog */}
       {skipModalDoseId && (

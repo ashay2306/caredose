@@ -236,19 +236,25 @@ Return JSON only.`;
     });
   });
 
-  // Dev mode Vite middleware
-  if (process.env.NODE_ENV !== 'production') {
-    const vite = await createViteServer({
-      server: { middlewareMode: true },
-      appType: 'spa',
-    });
-    app.use(vite.middlewares);
-  } else {
+  // Determine if running in production (either explicitly or on Render)
+  const isProduction = process.env.NODE_ENV === 'production' || Boolean(process.env.RENDER);
+
+  if (isProduction) {
     // Production static serving
     app.use(express.static(path.join(__dirname, 'dist')));
     app.get('*', (_req, res) => {
       res.sendFile(path.join(__dirname, 'dist', 'index.html'));
     });
+  } else {
+    // Dev mode Vite middleware
+    const vite = await createViteServer({
+      server: { 
+        middlewareMode: true,
+        allowedHosts: true,
+      },
+      appType: 'spa',
+    });
+    app.use(vite.middlewares);
   }
 
   app.listen(PORT, '0.0.0.0', () => {
