@@ -15,11 +15,9 @@ import {
   User,
   LogOut,
   ChevronDown,
-  UserPlus,
-  HeartPulse
+  UserPlus
 } from 'lucide-react';
 import { FamilyMember, AuthUser } from '../types/medicare';
-import { QuickAddMenu } from './QuickAddMenu';
 
 interface NavbarProps {
   members: FamilyMember[];
@@ -30,14 +28,9 @@ interface NavbarProps {
   currentUser: AuthUser | null;
   onOpenAuth: () => void;
   onLogout: () => void;
-  onOpenAddMedicine: () => void;
   onOpenScanner: () => void;
-  onOpenAddMember: () => void;
-  onOpenAddPrescription: () => void;
-  onOpenAddAppointment: () => void;
   onOpenArchitecture: () => void;
   onOpenSafetyGuide: () => void;
-  onOpenDatabaseExplainer?: () => void;
   onTriggerDemoReminder: () => void;
   onTriggerEscalationDemo: () => void;
   onResetData: () => void;
@@ -56,14 +49,9 @@ export const Navbar: React.FC<NavbarProps> = ({
   currentUser,
   onOpenAuth,
   onLogout,
-  onOpenAddMedicine,
   onOpenScanner,
-  onOpenAddMember,
-  onOpenAddPrescription,
-  onOpenAddAppointment,
   onOpenArchitecture,
   onOpenSafetyGuide,
-  onOpenDatabaseExplainer,
   onTriggerDemoReminder,
   onTriggerEscalationDemo,
   onResetData,
@@ -77,7 +65,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <header className="sticky top-0 z-30 bg-slate-900 border-b border-slate-800 text-white shadow-md">
-      {/* Top Banner with Quick Simulation shortcuts for College Demo */}
+      {/* Top Banner with Quick Simulation shortcuts */}
       <div className="bg-slate-950 px-4 py-1.5 text-xs flex flex-wrap items-center justify-between gap-2 border-b border-slate-800/80">
         <div className="flex items-center gap-3 text-slate-300">
           <span className="flex items-center gap-1.5 font-medium text-emerald-400">
@@ -86,28 +74,16 @@ export const Navbar: React.FC<NavbarProps> = ({
           </span>
           <span className="text-slate-600 hidden sm:inline">|</span>
           <span className="hidden sm:inline text-slate-400">
-            College Project: Smart Medication & Family Care System
+            Smart Medication & Family Care System
           </span>
         </div>
 
         <div className="flex items-center gap-2">
-          {/* Sharma Family Database Explainer shortcut */}
-          {onOpenDatabaseExplainer && (
-            <button
-              onClick={onOpenDatabaseExplainer}
-              className="flex items-center gap-1 px-2.5 py-1 rounded bg-teal-500/20 hover:bg-teal-500/30 text-teal-300 border border-teal-500/40 text-[11px] font-semibold transition-colors cursor-pointer"
-              title="Explore Sharma Indian Family Database Guide"
-            >
-              <HeartPulse className="w-3 h-3 text-teal-400" />
-              <span>Sharma Family DB</span>
-            </button>
-          )}
-
           {/* Quick Demo Simulator Buttons */}
           <button
             onClick={onTriggerDemoReminder}
             className="flex items-center gap-1 px-2.5 py-1 rounded bg-teal-500/20 hover:bg-teal-500/30 text-teal-300 border border-teal-500/40 text-[11px] font-medium transition-colors cursor-pointer"
-            title="Trigger real-time 8:00 PM Glycomet-GP dose reminder chime for Ramakant Dadaji"
+            title="Trigger real-time 8:00 PM Metformin dose reminder alert for Arthur (Grandpa)"
           >
             <Bell className="w-3 h-3 text-teal-400" />
             <span>Simulate Reminder Alert</span>
@@ -116,7 +92,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             onClick={onTriggerEscalationDemo}
             className="flex items-center gap-1 px-2.5 py-1 rounded bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/40 text-[11px] font-medium transition-colors cursor-pointer"
-            title="Demonstrate Missed Dose Escalation to Rajesh Sharma (+91 98201 44521)"
+            title="Demonstrate Missed Dose Escalation to Alex Rivera (+1 (555) 789-1022)"
           >
             <AlertTriangle className="w-3 h-3 text-rose-400" />
             <span>Simulate Missed Escalation</span>
@@ -162,7 +138,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
         </div>
 
-        {/* Family Member Switcher (Feature 5: Family Care Hub) */}
+        {/* Family Member Switcher */}
         <div className="flex items-center gap-2 bg-slate-800/80 p-1.5 rounded-xl border border-slate-700/80">
           <Users className="w-4 h-4 text-slate-400 ml-1.5 hidden sm:inline" />
           <span className="text-xs text-slate-400 hidden md:inline">Active Patient:</span>
@@ -193,15 +169,6 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Header Actions */}
         <div className="flex items-center gap-2">
-          {/* Prominent "+ Add Things" Quick Menu */}
-          <QuickAddMenu
-            onAddMedicine={onOpenAddMedicine}
-            onScanStrip={onOpenScanner}
-            onAddMember={onOpenAddMember}
-            onAddPrescription={onOpenAddPrescription}
-            onAddAppointment={onOpenAddAppointment}
-          />
-
           {/* Strip Scanner CTA Button */}
           <button
             onClick={onOpenScanner}
@@ -210,18 +177,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             <Camera className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Scan Strip</span>
           </button>
-
-          {/* Sharma Family Database Guide */}
-          {onOpenDatabaseExplainer && (
-            <button
-              onClick={onOpenDatabaseExplainer}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-teal-500/15 hover:bg-teal-500/25 text-teal-300 border border-teal-500/30 text-xs font-semibold transition-colors cursor-pointer"
-              title="Indian Family Database & Features Explainer"
-            >
-              <HeartPulse className="w-3.5 h-3.5 text-teal-400" />
-              <span className="hidden md:inline">Sharma Family DB</span>
-            </button>
-          )}
 
           {/* Safety Check Modal */}
           <button
@@ -232,11 +187,11 @@ export const Navbar: React.FC<NavbarProps> = ({
             <span className="hidden lg:inline">Safety Guide</span>
           </button>
 
-          {/* Architecture Explainer (For Viva / College Submission) */}
+          {/* Architecture Explainer */}
           <button
             onClick={onOpenArchitecture}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-medium transition-colors cursor-pointer"
-            title="Flutter & Firebase System Architecture"
+            title="System Architecture & Cloud Platform"
           >
             <Layers className="w-3.5 h-3.5 text-indigo-400" />
             <span className="hidden xl:inline">Architecture</span>

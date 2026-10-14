@@ -219,9 +219,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                       className="mt-0.5 rounded text-teal-600 focus:ring-teal-500"
                     />
                     <div className="text-xs">
-                      <span className="font-bold text-teal-950">Seed Sharma Indian Family Starter Pack</span>
+                      <span className="font-bold text-teal-950">Seed Starting Family & Medication Pack</span>
                       <p className="text-[11px] text-teal-800/90 mt-0.5">
-                        Recommended for new users: Seeds 6 Indian family members (Dadaji, Dadiji, Father, Mother, Son, Child), pre-loaded regimens (Glycomet, Atorva, Thyronorm, Shelcal), low-stock chemist alerts, and 92% adherence history for immediate explanation.
+                        Pre-loads multi-generational family profiles (Arthur, Elena, Robert, Alex, Leo), clinical regimens (Metformin, Atorvastatin, Levothyroxine, Lisinopril), doctor consultations with Dr. Sarah Jenkins & Dr. Robert Miller, and 92% adherence history.
                       </p>
                     </div>
                   </label>
@@ -238,37 +238,37 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             </button>
           </form>
 
-          {/* Quick Demo Logins (For College Examiners & Quick Testing) */}
+          {/* Quick Demo Logins */}
           <div className="pt-4 border-t border-slate-100 space-y-2">
             <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
-              ⚡ Quick 1-Click Indian Family Profiles:
+              ⚡ Quick 1-Click Demo Profiles:
             </span>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
               <button
                 type="button"
-                onClick={() => handleQuickDemoLogin('family_caregiver', 'Rajesh Sharma (Father)', 'rajesh.sharma@familycare.in')}
-                className="p-2 text-left bg-slate-50 hover:bg-emerald-50/60 border border-slate-200 hover:border-emerald-300 rounded-lg text-xs transition-colors cursor-pointer"
+                onClick={() => handleQuickDemoLogin('family_caregiver', 'Alex Rivera (Caregiver)', 'alex.rivera@familycare.com')}
+                className="p-2 text-left bg-slate-50 hover:bg-indigo-50/60 border border-slate-200 hover:border-indigo-300 rounded-lg text-xs transition-colors cursor-pointer"
               >
-                <div className="font-bold text-slate-900">Rajesh Sharma</div>
-                <div className="text-[10px] text-emerald-700 font-semibold">Primary Caregiver</div>
+                <div className="font-bold text-slate-900">Alex Rivera</div>
+                <div className="text-[10px] text-indigo-700 font-semibold">Primary Caregiver</div>
               </button>
 
               <button
                 type="button"
-                onClick={() => handleQuickDemoLogin('patient', 'Ramakant Sharma (Dadaji)', 'ramakant.sharma@familycare.in')}
+                onClick={() => handleQuickDemoLogin('patient', 'Arthur Rivera (Grandpa)', 'arthur.rivera@familycare.com')}
                 className="p-2 text-left bg-slate-50 hover:bg-sky-50/60 border border-slate-200 hover:border-sky-300 rounded-lg text-xs transition-colors cursor-pointer"
               >
-                <div className="font-bold text-slate-900">Ramakant Dadaji</div>
+                <div className="font-bold text-slate-900">Arthur Rivera</div>
                 <div className="text-[10px] text-sky-700 font-semibold">Senior Diabetic View</div>
               </button>
 
               <button
                 type="button"
-                onClick={() => handleQuickDemoLogin('patient', 'Saraswati Sharma (Dadiji)', 'saraswati.sharma@familycare.in')}
+                onClick={() => handleQuickDemoLogin('patient', 'Elena Rivera (Mother)', 'elena.rivera@familycare.com')}
                 className="p-2 text-left bg-slate-50 hover:bg-amber-50/60 border border-slate-200 hover:border-amber-300 rounded-lg text-xs transition-colors cursor-pointer"
               >
-                <div className="font-bold text-slate-900">Saraswati Dadiji</div>
-                <div className="text-[10px] text-amber-700 font-semibold">Thyroid & Calcium</div>
+                <div className="font-bold text-slate-900">Elena Rivera</div>
+                <div className="text-[10px] text-amber-700 font-semibold">Thyroid & Bone Care</div>
               </button>
             </div>
           </div>

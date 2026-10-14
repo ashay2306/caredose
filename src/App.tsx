@@ -12,12 +12,11 @@ import {
   INITIAL_MEMBERS, 
   INITIAL_MEDICINES, 
   INITIAL_PRESCRIPTIONS, 
-  INITIAL_APPOINTMENTS,
+  INITIAL_APPOINTMENTS, 
   generatePastDoseLogs 
 } from './data/initialData';
 import { soundService } from './services/soundService';
 import { notificationService } from './services/notificationService';
-
 import { Navbar } from './components/Navbar';
 import { TodaySchedule } from './components/TodaySchedule';
 import { StockAndRefills } from './components/StockAndRefills';
@@ -32,14 +31,13 @@ import { ArchitectureModal } from './components/ArchitectureModal';
 import { EscalationModal } from './components/EscalationModal';
 import { DueReminderModal } from './components/DueReminderModal';
 import { AuthModal } from './components/AuthModal';
-import { FamilyDatabaseExplainerModal } from './components/FamilyDatabaseExplainerModal';
 
 const INITIAL_USER: AuthUser = {
-  id: 'usr-rajesh',
-  name: 'Rajesh Sharma',
-  email: 'rajesh.sharma@familycare.in',
+  id: 'usr-alex',
+  name: 'Alex Rivera',
+  email: 'alex.rivera@familycare.com',
   role: 'family_caregiver',
-  avatarColor: '#059669',
+  avatarColor: '#4f46e5',
   createdAt: '2026-09-01T00:00:00Z',
 };
 
@@ -50,7 +48,7 @@ export default function App() {
     if (!saved) return INITIAL_USER;
     try {
       const parsed = JSON.parse(saved);
-      if (parsed.name && (parsed.name.includes('Alex') || parsed.name.includes('Arthur'))) {
+      if (parsed.name && (parsed.name.includes('Sharma') || parsed.name.includes('Rajesh'))) {
         return INITIAL_USER;
       }
       return parsed;
@@ -59,13 +57,13 @@ export default function App() {
     }
   });
 
-  // Load state from localStorage or initial demo data (migrating legacy names if found)
+  // Load state from localStorage or initial starting data
   const [members, setMembers] = useState<FamilyMember[]>(() => {
     const saved = localStorage.getItem('caredose_members');
     if (!saved) return INITIAL_MEMBERS;
     try {
       const parsed = JSON.parse(saved);
-      if (Array.isArray(parsed) && parsed.some((m: FamilyMember) => m.name.includes('Arthur') || m.name.includes('Robert'))) {
+      if (Array.isArray(parsed) && parsed.some((m: FamilyMember) => m.name.includes('Sharma') || m.name.includes('Ramakant'))) {
         return INITIAL_MEMBERS;
       }
       return parsed;
@@ -79,7 +77,7 @@ export default function App() {
     if (!saved) return INITIAL_MEDICINES;
     try {
       const parsed = JSON.parse(saved);
-      if (Array.isArray(parsed) && parsed.some((m: Medicine) => m.name.includes('Amlodipine Besylate') && !parsed.some((x: Medicine) => x.name.includes('Glycomet')))) {
+      if (Array.isArray(parsed) && parsed.some((m: Medicine) => m.name.includes('Glycomet') || m.name.includes('Thyronorm'))) {
         return INITIAL_MEDICINES;
       }
       return parsed;
@@ -91,7 +89,7 @@ export default function App() {
   const [doseLogs, setDoseLogs] = useState<DoseLog[]>(() => {
     const saved = localStorage.getItem('caredose_doselogs');
     const savedMeds = localStorage.getItem('caredose_medicines');
-    if (!saved || (savedMeds && savedMeds.includes('Amlodipine Besylate') && !savedMeds.includes('Glycomet'))) {
+    if (!saved || (savedMeds && savedMeds.includes('Glycomet'))) {
       return generatePastDoseLogs(INITIAL_MEDICINES);
     }
     try {
@@ -103,7 +101,7 @@ export default function App() {
 
   const [prescriptions, setPrescriptions] = useState<Prescription[]>(() => {
     const saved = localStorage.getItem('caredose_prescriptions');
-    if (!saved || saved.includes('Jenkins')) return INITIAL_PRESCRIPTIONS;
+    if (!saved || saved.includes('Arvind Mehta')) return INITIAL_PRESCRIPTIONS;
     try {
       return JSON.parse(saved);
     } catch {
@@ -113,7 +111,7 @@ export default function App() {
 
   const [appointments, setAppointments] = useState<Appointment[]>(() => {
     const saved = localStorage.getItem('caredose_appointments');
-    if (!saved || saved.includes('Jenkins')) return INITIAL_APPOINTMENTS;
+    if (!saved || saved.includes('Arvind Mehta')) return INITIAL_APPOINTMENTS;
     try {
       return JSON.parse(saved);
     } catch {
@@ -132,7 +130,6 @@ export default function App() {
   const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
 
   // Modals
-  const [databaseExplainerOpen, setDatabaseExplainerOpen] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [scannerOpen, setScannerOpen] = useState(false);
   const [addModalOpen, setAddModalOpen] = useState(false);
@@ -140,7 +137,6 @@ export default function App() {
   const [architectureOpen, setArchitectureOpen] = useState(false);
   const [escalationModalOpen, setEscalationModalOpen] = useState(false);
   const [dueReminderOpen, setDueReminderOpen] = useState(false);
-  const [triggerAddType, setTriggerAddType] = useState<'member' | 'prescription' | 'appointment' | null>(null);
 
   // Target member/medicine for modals
   const [escalationMember, setEscalationMember] = useState<FamilyMember>(INITIAL_MEMBERS[0]);
@@ -205,7 +201,7 @@ export default function App() {
   const handleLoginSuccess = (user: AuthUser, withDemoPack?: boolean) => {
     setCurrentUser(user);
     if (withDemoPack) {
-      // Seed complete Sharma Indian Family Database for immediate exploration
+      // Seed complete Starting Family Database with doctors and medicines
       setMembers(INITIAL_MEMBERS);
       setMedicines(INITIAL_MEDICINES);
       setDoseLogs(generatePastDoseLogs(INITIAL_MEDICINES));
@@ -223,7 +219,7 @@ export default function App() {
         age: 28,
         avatarColor: user.avatarColor,
         guardianName: user.name,
-        guardianPhone: '+91 98765 43210',
+        guardianPhone: '+1 (555) 789-1022',
         guardianEmail: user.email,
         isPrimaryCaregiver: true,
         notes: 'Primary registered patient account. Ready to add medicines and family members.',
@@ -312,30 +308,30 @@ export default function App() {
     });
   };
 
-  // Stock update handler
+  // Stock management handler
   const handleUpdateStock = (medicineId: string, newStock: number) => {
     setMedicines((prev) =>
       prev.map((m) => (m.id === medicineId ? { ...m, currentStock: newStock } : m))
     );
   };
 
-  // Add Medicine handler (from manual form or scanner)
+  // Add Medicine handler
   const handleAddMedicine = (newMed: Omit<Medicine, 'id' | 'createdAt'>) => {
     const id = `med-${Date.now()}`;
-    const fullMed: Medicine = {
+    const medicine: Medicine = {
       ...newMed,
       id,
       createdAt: new Date().toISOString(),
     };
 
-    setMedicines((prev) => [fullMed, ...prev]);
+    setMedicines((prev) => [medicine, ...prev]);
 
-    // Create today's scheduled dose logs for this medicine
+    // Generate immediate logs for today's timings
     const todayStr = new Date().toISOString().split('T')[0];
-    const newLogs: DoseLog[] = fullMed.scheduleTimings.map((time) => ({
+    const newLogs: DoseLog[] = medicine.scheduleTimings.map((time) => ({
       id: `log-${id}-${todayStr}-${time.replace(':', '')}`,
       medicineId: id,
-      profileId: fullMed.profileId,
+      profileId: medicine.profileId,
       scheduledDate: todayStr,
       scheduledTime: time,
       status: 'pending',
@@ -348,8 +344,8 @@ export default function App() {
   // Add Family Member handler
   const handleAddMember = (newMem: Omit<FamilyMember, 'id'>) => {
     const id = `mem-${Date.now()}`;
-    const fullMem: FamilyMember = { ...newMem, id };
-    setMembers((prev) => [...prev, fullMem]);
+    const member: FamilyMember = { ...newMem, id };
+    setMembers((prev) => [...prev, member]);
     setSelectedMemberId(id);
   };
 
@@ -367,22 +363,21 @@ export default function App() {
 
   // Trigger Simulated Reminder Alert
   const handleTriggerDemoReminder = () => {
-    const dadaji = members.find((m) => m.name.includes('Dadaji') || m.relationship === 'Grandparent') || members[0];
-    const glycomet = medicines.find((m) => 
-      m.name.toLowerCase().includes('glycomet') || 
+    const grandpa = members.find((m) => m.name.includes('Arthur') || m.relationship === 'Grandparent') || members[0];
+    const metformin = medicines.find((m) => 
       m.name.toLowerCase().includes('metformin')
     ) || medicines[0];
 
-    setEscalationMember(dadaji);
-    setEscalationMedicine(glycomet);
+    setEscalationMember(grandpa);
+    setEscalationMedicine(metformin);
     if (soundEnabled) soundService.playReminderChime();
-    notificationService.sendTestNotification(glycomet, dadaji);
+    notificationService.sendTestNotification(metformin, grandpa);
     setDueReminderOpen(true);
   };
 
   // Trigger Missed Escalation Demo
   const handleTriggerEscalationDemo = (member?: FamilyMember, med?: Medicine) => {
-    const targetM = member || members.find((m) => m.name.includes('Dadaji') || m.relationship === 'Grandparent') || members[0];
+    const targetM = member || members.find((m) => m.name.includes('Arthur') || m.relationship === 'Grandparent') || members[0];
     const targetMed = med || medicines.find((m) => m.profileId === targetM.id) || medicines[0];
 
     setEscalationMember(targetM);
@@ -411,7 +406,7 @@ export default function App() {
 
   // Reset to initial presentation data
   const handleResetData = () => {
-    if (window.confirm('Reset CareDose to the complete Sharma Indian Family Database?')) {
+    if (window.confirm('Reset CareDose to the starting family, doctors, and medicines?')) {
       localStorage.clear();
       setCurrentUser(INITIAL_USER);
       setMembers(INITIAL_MEMBERS);
@@ -440,26 +435,9 @@ export default function App() {
         currentUser={currentUser}
         onOpenAuth={() => setAuthModalOpen(true)}
         onLogout={handleLogout}
-        onOpenAddMedicine={() => setAddModalOpen(true)}
         onOpenScanner={() => setScannerOpen(true)}
-        onOpenAddMember={() => {
-          setActiveTab('family');
-          setTriggerAddType('member');
-          setTimeout(() => setTriggerAddType(null), 800);
-        }}
-        onOpenAddPrescription={() => {
-          setActiveTab('prescriptions');
-          setTriggerAddType('prescription');
-          setTimeout(() => setTriggerAddType(null), 800);
-        }}
-        onOpenAddAppointment={() => {
-          setActiveTab('appointments');
-          setTriggerAddType('appointment');
-          setTimeout(() => setTriggerAddType(null), 800);
-        }}
         onOpenArchitecture={() => setArchitectureOpen(true)}
         onOpenSafetyGuide={() => setSafetyOpen(true)}
-        onOpenDatabaseExplainer={() => setDatabaseExplainerOpen(true)}
         onTriggerDemoReminder={handleTriggerDemoReminder}
         onTriggerEscalationDemo={() => handleTriggerEscalationDemo()}
         onResetData={handleResetData}
@@ -482,7 +460,6 @@ export default function App() {
             onOpenScanner={() => setScannerOpen(true)}
             onTriggerAlarmChime={() => soundService.playReminderChime()}
             onSimulateEscalation={(mem, med) => handleTriggerEscalationDemo(mem, med)}
-            onOpenDatabaseExplainer={() => setDatabaseExplainerOpen(true)}
           />
         )}
 
@@ -509,7 +486,6 @@ export default function App() {
               setActiveTab('today');
             }}
             onSimulateEscalation={(mem, med) => handleTriggerEscalationDemo(mem, med)}
-            initialAddOpen={triggerAddType === 'member'}
           />
         )}
 
@@ -529,7 +505,6 @@ export default function App() {
             medicines={medicines}
             selectedMemberId={selectedMemberId}
             onAddPrescription={handleAddPrescription}
-            initialAddOpen={triggerAddType === 'prescription'}
           />
         )}
 
@@ -541,7 +516,6 @@ export default function App() {
             selectedMemberId={selectedMemberId}
             onAddAppointment={handleAddAppointment}
             onTriggerChime={() => soundService.playReminderChime()}
-            initialAddOpen={triggerAddType === 'appointment'}
           />
         )}
       </main>
@@ -563,21 +537,6 @@ export default function App() {
           </div>
         </div>
       </footer>
-
-      {/* Sharma Family Database Explainer Modal */}
-      <FamilyDatabaseExplainerModal
-        isOpen={databaseExplainerOpen}
-        onClose={() => setDatabaseExplainerOpen(false)}
-        members={members}
-        medicines={medicines}
-        onSelectMember={(id) => {
-          setSelectedMemberId(id);
-          setActiveTab('today');
-        }}
-        onTriggerDemoReminder={handleTriggerDemoReminder}
-        onTriggerEscalationDemo={() => handleTriggerEscalationDemo()}
-        onResetToIndianFamilyDB={handleResetData}
-      />
 
       {/* Auth Modal (Login / Register) */}
       <AuthModal

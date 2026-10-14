@@ -47,8 +47,8 @@ export const FamilyHub: React.FC<FamilyHubProps> = ({
   const [newName, setNewName] = useState('');
   const [newRelationship, setNewRelationship] = useState<Relationship>('Grandparent');
   const [newAge, setNewAge] = useState(72);
-  const [newGuardianName, setNewGuardianName] = useState('Rajesh Sharma (Caregiver)');
-  const [newGuardianPhone, setNewGuardianPhone] = useState('+91 98201 44521');
+  const [newGuardianName, setNewGuardianName] = useState('Alex Rivera (Caregiver)');
+  const [newGuardianPhone, setNewGuardianPhone] = useState('+1 (555) 789-1022');
   const [newNotes, setNewNotes] = useState('');
 
   const todayStr = new Date().toISOString().split('T')[0];
